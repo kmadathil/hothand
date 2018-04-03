@@ -13,7 +13,7 @@ We can also see that in a *different* formulation, the answer does become 50% as
 $ python hothand.py --help
 usage: hothand.py [-h] [--n N] [--p P] [--trials TRIALS]
 
-Plot Raman Spectrum
+Hot Hand Simulator
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -22,6 +22,7 @@ optional arguments:
   --trials TRIALS  Number of trials
 
 ```
+
 For example:
 ```
 $ python hothand.py --n 12 --p 0.5 --trials 100000
