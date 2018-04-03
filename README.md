@@ -4,7 +4,7 @@ Inspired by Joshua B. Miller's [tweet](https://twitter.com/jben0/status/98030838
 
 hothand simulates a series of basketball shooters who hit/miss their target at random with a defined probability. Given a pseudo-hot-hand (simulated as a series of shooters on the left of the current shooter all hitting), we compute the probability of the current shooter hitting.
 
-In Miller's formulation (as in the above tweet), the answer is not 50%! That is an interesting result. Using this simulator, we see that his calculations are right (as we'd expect). 
+In Miller's formulation (as in the above tweet), the answer is not 50%! That is an interesting result. Using this simulator, we can verify those calculations. Seeing is believing!
 
 We can also see that in a *different* formulation, the answer does become 50% as we'd expect. If we sample over all possible shooting streaks of at least 3 - by using an ensemble average, rather than an average of per iteration averages, we do get 50%. It's thus important to think of which way sampling happens in real life situations that are analogous to the hot hand problem.
 
