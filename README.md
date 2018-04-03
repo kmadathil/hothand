@@ -42,7 +42,7 @@ Grey    974658  486989   49.965116
 Total  1200000  599605   49.967083
 
 ```
-As can be seen - sampled over iterations, with each iteration equally likely to happen (and hence hot hands from it%erations with more hot hand streaks being less likely to be sampled), the probablity of a shot being hit, conditional to a hot hand seen prior, is close to 35%.
+As can be seen - sampled over iterations, with each iteration equally likely to happen (and hence hot hands from iterations with more hot hand streaks being less likely to be sampled), the probablity of a shot being hit, conditional to a hot hand seen prior, is close to 35%.
 
 However, sampled uniformly over the ensemble, with each hot hand equally likely to be seen, we have a 50% probability. 
 
