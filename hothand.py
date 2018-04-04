@@ -23,24 +23,28 @@ import numpy as np
 import pandas as pd
 import datetime
 import argparse
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def hothand(n=100,p=.5,iter=1000):
+def hothand(n=100,p=.5,k=3,it=1000,debug=True):
+    logger.info("Players: {} Probability: {} Iterations: {} Length {}".format(n,p,it,k))
     # Random shots
-    sframe=pd.DataFrame(np.random.random_sample((n,iter))).\
+    sframe=pd.DataFrame(np.random.random_sample((n,it))).\
             applymap(lambda x: x < p)
-    print("Shooting simulation done",datetime.datetime.now())
+    logger.info("Shooting simulation done{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
     # Assign colours based on shots taken by shooters to the left
     rframe=sframe.apply(
         lambda x:
-           [((i>2) and x[i-1] and x[i-2] and x[i-3]) for i in x.index]
+           [((i>2) and np.all(x.values[i-k:i])) for i in x.index]
     )
     bframe=sframe.apply(
         lambda x:
-           [(i>2) and not (x[i-1] or x[i-2] or x[i-3]) for i in x.index]
+           [((i>2) and not np.any(x.values[i-k:i])) for i in x.index]
     )
     gframe= ~(rframe | bframe)
-    print("Colour assignment done",datetime.datetime.now())
+    logger.info("Colour assignment done{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
 
     # Mean of probabilities per run
     pframe=pd.Series([0.,0.,0.],index=["Red","Blue","Grey"])
@@ -52,14 +56,14 @@ def hothand(n=100,p=.5,iter=1000):
     tframe=pd.DataFrame([],index=["Red","Blue","Grey","Total"],
                           columns=["shots","hits","percentage"])
     tframe["shots"] = [np.sum(rframe.values),np.sum(bframe.values),
-                         np.sum(gframe.values),n*iter]
+                         np.sum(gframe.values),n*it]
     tframe["hits"]  = [np.sum((rframe&sframe).values),
                          np.sum((bframe&sframe).values),
                          np.sum((gframe&sframe).values),
                          np.sum(sframe.values)]
     tframe["percentage"]= (100.0 * tframe["hits"])/tframe["shots"]
 
-    print("End",datetime.datetime.now())
+    logger.info("End{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
     return pframe,tframe
 
 if __name__ == "__main__":
@@ -71,12 +75,24 @@ if __name__ == "__main__":
                             help="Probability of hitting a shot")
         parser.add_argument('--trials',type=int,default=1000,
                             help="Number of trials")
+        parser.add_argument('--k',type=int,default=3,
+                            help="Required hot hand length")
+        parser.add_argument('--prob',action='store_true',
+                            help="Generate Probability Plots")
         args=parser.parse_args()
         return args
     
     def main():
         args=getargs()
-        result=hothand(args.n,args.p,args.trials)
-        print("Per Run:\n",result[0])
-        print("Ensemble:\n",result[1])
+        if not args.prob:
+            logging.basicConfig(filename='hothand.log',
+                                filemode='w', level=logging.INFO)
+            result=hothand(args.n,args.p,args.k,args.trials)
+            print("Per Run:\n",result[0])
+            print("Ensemble:\n",result[1])
+        else:
+            logging.basicConfig(filename='hothand.log',
+                                filemode='w', level=logging.WARNING)
+            print("Later")
+          
     main()
