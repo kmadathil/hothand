@@ -33,18 +33,18 @@ def hothand(n=100,p=.5,k=3,it=1000,debug=True):
     # Random shots
     sframe=pd.DataFrame(np.random.random_sample((n,it))).\
             applymap(lambda x: x < p)
-    logger.info("Shooting simulation done{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
+    logger.info("Shooting simulation done {:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
     # Assign colours based on shots taken by shooters to the left
     rframe=sframe.apply(
         lambda x:
-           [((i>2) and np.all(x.values[i-k:i])) for i in x.index]
+           [((i>k-1) and np.all(x.values[i-k:i])) for i in x.index]
     )
     bframe=sframe.apply(
         lambda x:
-           [((i>2) and not np.any(x.values[i-k:i])) for i in x.index]
+           [((i>k-1) and not np.any(x.values[i-k:i])) for i in x.index]
     )
     gframe= ~(rframe | bframe)
-    logger.info("Colour assignment done{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
+    logger.info("Colour assignment done {:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
 
     # Mean of probabilities per run
     pframe=pd.Series([0.,0.,0.],index=["Red","Blue","Grey"])
@@ -63,7 +63,7 @@ def hothand(n=100,p=.5,k=3,it=1000,debug=True):
                          np.sum(sframe.values)]
     tframe["percentage"]= (100.0 * tframe["hits"])/tframe["shots"]
 
-    logger.info("End{:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
+    logger.info("End {:%B %d, %Y %H %M %S}".format(datetime.datetime.now()))
     return pframe,tframe
 
 if __name__ == "__main__":
